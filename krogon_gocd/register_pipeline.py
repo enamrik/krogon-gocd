@@ -1,5 +1,5 @@
 from typing import Callable
-import python_either.either as E
+import krogon_gocd.either as E
 from .gocd_api import request
 
 
@@ -10,8 +10,10 @@ def register_pipeline(k_ctl: Callable[[str, str], E.Either],
                       password: str,
                       cluster_name: str):
 
-    return _delete_repo_registration(k_ctl, app_name, username, password, cluster_name) \
-           | E.then | (lambda secret:  _register_repo(k_ctl, app_name, git_url, username, password, cluster_name))
+    return E.then(
+        _delete_repo_registration(k_ctl, app_name, username, password, cluster_name),
+        (lambda secret:  _register_repo(k_ctl, app_name, git_url, username, password, cluster_name))
+    )
 
 
 def _delete_repo_registration(k_ctl: Callable[[str, str], E.Either],
@@ -20,11 +22,13 @@ def _delete_repo_registration(k_ctl: Callable[[str, str], E.Either],
                               password: str,
                               cluster_name: str):
 
-    return request(k_ctl, 'DELETE', '/go/api/admin/config_repos/' + app_name,
-                   {'Accept': 'application/vnd.go.cd.v1+json'},
-                   None,
-                   username, password, cluster_name) \
-           | E.catch_error | (lambda _: E.Success())
+    E.catch_error(
+        request(k_ctl, 'DELETE', '/go/api/admin/config_repos/' + app_name,
+                {'Accept': 'application/vnd.go.cd.v1+json'},
+                None,
+                username, password, cluster_name),
+        (lambda _: E.success())
+    )
 
 
 def _register_repo(k_ctl: Callable[[str, str], E.Either],

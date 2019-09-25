@@ -9,8 +9,6 @@ python = "^3.7"
 "ruamel.yaml" = "^0.15"
 click = "^7.0"
 bcrypt = "^3.1"
-python-maybe = { git = "ssh://git@github.com/enamrik/python-maybe.git", tag = "0.0.1" }
-python-either = {git = "ssh://git@github.com/enamrik/python-either.git", tag = "0.0.1" }
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.1"

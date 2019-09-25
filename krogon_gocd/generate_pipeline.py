@@ -1,8 +1,8 @@
 import krogon_gocd.yaml as yaml
-import python_either.either as E
-import python_maybe.maybe as M
+import krogon_gocd.either as E
+import krogon_gocd.maybe as M
 import krogon_gocd.file as f
-from python_maybe.nullable import nmap
+from krogon_gocd.maybe import nmap
 from typing import Optional, Callable
 from .encrypt_secret import encrypt_secret
 
@@ -19,16 +19,18 @@ def generate_pipeline(k_ctl: Callable[[str, str], E.Either],
                       password: str,
                       cluster_name: str):
 
-    return encrypt_secret(k_ctl, service_account_b64, username, password, cluster_name) \
-           | E.then | (lambda encrypted_svc_account:
-                       _generate_gocd_template(
-                           project_id,
-                           encrypted_svc_account,
-                           app_name,
-                           git_url,
-                           python_agent_name,
-                           krogon_file_path,
-                           krogon_install_url))
+    return E.then(
+        encrypt_secret(k_ctl, service_account_b64, username, password, cluster_name),
+        (lambda encrypted_svc_account:
+         _generate_gocd_template(
+             project_id,
+             encrypted_svc_account,
+             app_name,
+             git_url,
+             python_agent_name,
+             krogon_file_path,
+             krogon_install_url))
+    )
 
 
 def _generate_gocd_template(project_id: str,

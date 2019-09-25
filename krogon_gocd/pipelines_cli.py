@@ -1,5 +1,5 @@
 import click
-import python_either.either as E
+import krogon_gocd.either as E
 from .register_pipeline import register_pipeline
 from .generate_pipeline import generate_pipeline
 
@@ -23,9 +23,11 @@ def register(ctx: dict,
              cluster_name: str):
     kubectl = ctx['kubectl']
 
-    register_pipeline(kubectl, app_name, git_url, username, password, cluster_name) \
-    | E.on | dict(success=lambda r: print('DONE: {}'.format(r)),
-                  failure=lambda e: print('FAILED: {}'.format(e)))
+    E.on(
+        register_pipeline(kubectl, app_name, git_url, username, password, cluster_name),
+        dict(success=lambda r: print('DONE: {}'.format(r)),
+             failure=lambda e: print('FAILED: {}'.format(e)))
+    )
 
 
 @pipelines.command()
@@ -51,16 +53,18 @@ def generate(ctx: dict,
     service_account_b64 = ctx['service_account_b64']
     krogon_install_url = ctx['krogon_install_url']
 
-    generate_pipeline(kubectl,
-                      project_id,
-                      service_account_b64,
-                      app_name,
-                      git_url,
-                      python_agent_name,
-                      krogon_file,
-                      krogon_install_url,
-                      username,
-                      password,
-                      cluster_name) \
-    | E.on | dict(success=lambda r: print('DONE: {}'.format(r)),
-                  failure=lambda e: print('FAILED: {}'.format(e)))
+    E.on(
+        generate_pipeline(kubectl,
+                          project_id,
+                          service_account_b64,
+                          app_name,
+                          git_url,
+                          python_agent_name,
+                          krogon_file,
+                          krogon_install_url,
+                          username,
+                          password,
+                          cluster_name),
+        dict(success=lambda r: print('DONE: {}'.format(r)),
+             failure=lambda e: print('FAILED: {}'.format(e)))
+    )

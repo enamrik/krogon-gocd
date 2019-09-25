@@ -1,5 +1,5 @@
 import krogon_gocd.yaml as yaml
-import python_either.either as E
+import krogon_gocd.either as E
 import krogon_gocd.file as fs
 from .gocd_version import gocd_version
 from .generate_agent_pod_template import generate_agent_pod_template

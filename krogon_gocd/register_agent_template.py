@@ -1,4 +1,4 @@
-import python_either.either as E
+import krogon_gocd.either as E
 import krogon_gocd.file as f
 from typing import Callable
 from .gocd_api import request

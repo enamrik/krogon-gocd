@@ -1,5 +1,5 @@
 from typing import Optional, Callable
-import python_either.either as E
+import krogon_gocd.either as E
 import json
 
 
@@ -29,8 +29,10 @@ def request(kubectl: Callable[[str, str], E.Either], method: str, path: str, hea
                 body=body,
                 username=username, password=password)
 
-    return kubectl(cluster_name, 'get pods -l app=gocd,component=server  -o name') \
-           | E.then | (lambda pod_name: kubectl(cluster_name,
-                                                'exec {} -- {}'.format(
-                                                    pod_name.replace("pod/", ""),
-                                                    cmd)))
+    return E.then(
+        kubectl(cluster_name, 'get pods -l app=gocd,component=server  -o name'),
+        (lambda pod_name: kubectl(cluster_name,
+                                  'exec {} -- {}'.format(
+                                      pod_name.replace("pod/", ""),
+                                      cmd)))
+    )

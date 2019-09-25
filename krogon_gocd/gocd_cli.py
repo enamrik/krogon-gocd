@@ -1,4 +1,4 @@
-import python_either.either as E
+import krogon_gocd.either as E
 import click
 from .pipelines_cli import pipelines
 from .agents_cli import agents
@@ -23,9 +23,11 @@ gocd.add_command(agents)
 def encrypt(ctx: dict, plain_text: str, username: str, password: str, cluster_name: str):
     kubectl = ctx['kubectl']
 
-    encrypt_secret(kubectl, plain_text, username, password, cluster_name) \
-    | E.on | dict(success=lambda r: print('DONE: \n\nENCRYPTED TEXT: {}'.format(r)),
-                  failure=lambda e: print('FAILED: {}'.format(e)))
+    E.on(
+        encrypt_secret(kubectl, plain_text, username, password, cluster_name),
+        dict(success=lambda r: print('DONE: \n\nENCRYPTED TEXT: {}'.format(r)),
+             failure=lambda e: print('FAILED: {}'.format(e)))
+    )
 
 
 def main():
