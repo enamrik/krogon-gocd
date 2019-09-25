@@ -150,8 +150,8 @@ def _create_krogon_job(python_agent_name: str,
 
     return {
         'elastic_profile_id': python_agent_name,
-        'environment_variables': {'GCP_PROJECT': project_id},
-        'secure_variables': {'GCP_SERVICE_ACCOUNT_B64': secure_service_account_b64},
+        'environment_variables': {'KG_PROJECT_ID': project_id},
+        'secure_variables': {'KG_SERVICE_ACCOUNT_B64': secure_service_account_b64},
         'tasks': [
             {'exec': {
                 'command': 'sh',
