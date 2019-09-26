@@ -5,7 +5,6 @@ from .generate_agent_templates import generate_agent_templates
 
 
 @click.group()
-@click.pass_obj
 def agents(): pass
 
 
