@@ -12,7 +12,7 @@ def agents(): pass
 @click.option('--agent-name', required=True, help='GoCD agent\'s elastic profile id')
 @click.option('--image-url', required=True, help='Docker fully qualified image name on which agent is based')
 @click.option('--out-dir', required=True, help='Directory where Dockerfile should be stored')
-def generate_agent(agent_name: str, out_dir: str, image_url: str):
+def generate(agent_name: str, out_dir: str, image_url: str):
     E.on(
         generate_agent_templates(agent_name, out_dir, image_url),
         dict(success=lambda r: print('DONE: {}'.format(r)),
@@ -28,8 +28,8 @@ def generate_agent(agent_name: str, out_dir: str, image_url: str):
 @click.option('--username', required=True, help='GoCD username')
 @click.option('--password', required=True, help='GoCD password')
 @click.pass_obj
-def register_agent(ctx: dict, agent_name: str, agent_template_path: str, image_url,
-                   username: str, password: str, cluster_name: str):
+def register(ctx: dict, agent_name: str, agent_template_path: str, image_url,
+             username: str, password: str, cluster_name: str):
     kubectl = ctx['kubectl']
 
     E.on(
