@@ -22,7 +22,7 @@ def _delete_repo_registration(k_ctl: Callable[[str, str], E.Either],
                               password: str,
                               cluster_name: str):
 
-    E.catch_error(
+    return E.catch_error(
         request(k_ctl, 'DELETE', '/go/api/admin/config_repos/' + app_name,
                 {'Accept': 'application/vnd.go.cd.v1+json'},
                 None,
